@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Input Data</title>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<h2>Input Data</h2>
+<form id="dataForm">
+    <label for="nama">Nama:</label>
+    <input type="text" id="nama" name="nama"><br><br>
+    <label for="npm">NPM:</label>
+    <input type="text" id="npm" name="npm"><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Data yang Disimpan</h2>
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>NPM</th>
+        </tr>
+    </thead>
+    <tbody id="dataBody">
+    </tbody>
+</table>
+
+<button id = "clearButton">Clear</button>
+<script>
+
+    document.getElementById('dataForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const nama = document.getElementById('nama').value;
+        const npm = document.getElementById('npm').value;
+
+        let data = JSON.parse(localStorage.getItem('userData')) || [];
+
+
+        data.push({nama: nama, npm: npm});
+
+
+        localStorage.setItem('userData', JSON.stringify(data));
+
+        displayData();
+    });
+
+
+    function displayData() {
+        const dataBody = document.getElementById('dataBody');
+        dataBody.innerHTML = '';
+
+        let data = JSON.parse(localStorage.getItem('userData')) || [];
+
+        data.forEach(function(item) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.nama}</td>
+                <td>${item.npm}</td>
+            `;
+            dataBody.appendChild(row);
+        });
+    }
+
+
+
+    // Memanggil fungsi untuk menampilkan data saat halaman dimuat
+    displayData();
+    document.getElementById('clearButton').addEventListener('click',function(){
+        localStorage.removeItem('userData');
+        displayData();
+    })
+</script>
+
+</body>
+</html>
